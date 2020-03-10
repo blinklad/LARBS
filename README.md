@@ -74,3 +74,48 @@ effectively with the `newperms` function. At the end of installation,
 `newperms` removes those settings, giving the user the ability to run only
 several basic sudo commands without a password (`shutdown`, `reboot`,
 `pacman -Syu`).
+
+### TODO
+
+1. You will want to enable networking services:
+```
+# systemctl enable NetworkManager
+# systemctl start NetworkManager
+```
+
+2. Xorg will have tearing under xcompmgr, especially noticable when scrolling
+text documents. You will want to create a file for your graphics card (or
+integrated graphics in the case of Intel) to remove the tearing.
+Assuming vim is your text editor, and you are using Intel graphics:
+```
+# vim /etc/X11/xorg-conf.d/20-intel.conf
+
+Section "Device"
+	"Intel Graphics"
+	"intel"
+	"TearFree" "true"
+EndSection
+```
+3. If you wish to adjust your backlight settings using eg ```xbacklight```, add
+an additional line under the "Device" section:
+```
+"Backlight" "intel_backlight"
+```
+
+4. If you want to set up eduroam for UTas, run the included script (it should be
+under your $PATH). Make sure to use your _full_ username, including email:
+```
+$ eduroam-linux-UoT.py
+```
+
+5. Nextly, if you want to use the provided VPN, you will need to download the
+networkmanager-vpnc plugin _and_ nm-applet. Technically you won't need the applet,
+but vanilla nmtui does not contain checks for the vpnc options, and it's slightly
+easier to wrestle with nmgui to get things set up before enabling automation through
+nmcli.
+networkmanager-vpnc (sp.?) should be on the AUR:
+```
+$ yay -Syu networkmanager-vpnc
+```
+Pre-shared keys / group names would be silly to list here, and change often enough to not write them down.
+Ask your system administrator or someone else who has this setup for them.
