@@ -74,3 +74,19 @@ effectively with the `newperms` function. At the end of installation,
 `newperms` removes those settings, giving the user the ability to run only
 several basic sudo commands without a password (`shutdown`, `reboot`,
 `pacman -Syu`).
+
+
+Enable Periodic Trim
+TRIM is a way to garbage collect your SSD. You probably want it enabled.
+
+To verify trim support:
+```
+lsblk --discard
+```
+Any non-0 values under DISC_GRAN and DISC_MAX indicate TRIM support.
+
+Enable trim through the ```systemd``` unit files, included with ```util.linux```:
+```
+systemctl enable fstrim.service
+systemctl enable fstrim.timer
+```
