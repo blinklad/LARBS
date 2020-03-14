@@ -119,3 +119,26 @@ $ yay -Syu networkmanager-vpnc
 ```
 Pre-shared keys / group names would be silly to list here, and change often enough to not write them down.
 Ask your system administrator or someone else who has this setup for them.
+
+6. ```pacman``` mirror lists often need updating by most recent synchronization status.
+The ```reflector``` package contains a script to run a hook to update the mirror list
+after a successful transaction; it just needs to be enabled.
+An easy way is to update the list once a week.
+```
+# nvim /etc/systemd/system/reflector.service
+
+[Unit]
+Description=Pacman mirrorlist update
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/reflector --protocol https --latest 30 --number 20 --sort rate --save /etc/pacman.d/mirrorlist
+
+[Install]
+RequiredBy=multi-user.target
+
+# systemctl enable reflector.service
+# systemctl start reflector.service
+```
